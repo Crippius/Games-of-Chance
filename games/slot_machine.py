@@ -89,17 +89,3 @@ def slot_machine(betted_money):
 
 # Possibilities
 slot_machine(20)
-
-w_l = []
-m = []
-for i in range(10000):
-    money=100
-    slot_machine(20)
-    if money == 80:
-        w_l.append("l")
-    else:
-        w_l.append("w")
-    m.append(money-100)
-
-print(w_l.count("w")/len(w_l))
-print(sum(m)) 

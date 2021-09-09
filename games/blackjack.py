@@ -115,17 +115,3 @@ blackjack(20, autoplay=True)
 
 # Problems
 blackjack(20, autoplay="y")
-
-w_l = []
-m = []
-for i in range(10000):
-    money=100
-    blackjack(20, autoplay=True)
-    if money == 80:
-        w_l.append("l")
-    else:
-        w_l.append("w")
-    m.append(money-100)
-
-print(w_l.count("w")/len(w_l))
-print(sum(m))

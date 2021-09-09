@@ -115,18 +115,3 @@ roulette(20, odd_or_even="Even", manque_or_passe="Passe", red_black_green="Black
 roulette(20)
 roulette(20, numbers=[31], red_black_green="Red")
 roulette(20, red_black_green="Yellow")
-
-w_l = []
-m = []
-for i in range(10000):
-    money=100
-    roulette(20, numbers=[1,2,3,4,5,6])
-    if money == 80:
-        w_l.append("l")
-    else:
-        w_l.append("w")
-    m.append(money-100)
-
-print(w_l.count("w")/len(w_l))
-print(sum(m))
-

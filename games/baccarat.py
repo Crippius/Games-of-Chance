@@ -167,17 +167,3 @@ baccarat(20, player_or_better="Better", pair="Player")
 baccarat(20, player_or_better="Player", x_win="Player")
 baccarat(20, player_or_better="Better")
 baccarat(20, player_or_better="Player", pair="Player")
-
-w_l = []
-m = []
-for i in range(10000):
-    money=100
-    baccarat(20, player_or_better="Player")
-    if money == 80:
-        w_l.append("l")
-    else:
-        w_l.append("w")
-    m.append(money-100)
-
-print(w_l.count("w")/len(w_l))
-print(sum(m))
