@@ -28,9 +28,13 @@ class Casino:
         print("Thanks for coming to the 'Games of Chance' casino! Here's your record")
         for i in self.record:
             won = self.record[i].count("Win")
+            tie = self.record[i].count("Tie")
             lost = self.record[i].count("Lost")
-            percent = 100
-            print("For %s: you won %d games and lost %d, (%d percent of games)" % (i, won, lost, percent))
+            percent = (won/(won+lost+tie))
+            if tie == 0:
+                print("For %s: you won %d games and lost %d, (%d percent of games won)" % (i, won, lost, percent))
+            else:
+                print("For %s: you won %d games, tied %d and lost %d, (%d percent of games won)" % (i, won, tie, lost, percent))
         final = "gained" if self.money > 100 else ("still have" if self.money==100 else "lost")
         print("---------------------")
         print("You %s %d chips" % (final, abs(self.money-100)))
