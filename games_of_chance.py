@@ -1,5 +1,6 @@
 import random
 from problems_check import problems_check
+from termcolor import colored, cprint
 
 class Casino:
 
@@ -32,9 +33,9 @@ class Casino:
             lost = self.record[i].count("Lost")
             percent = (won/(won+lost+tie))
             if tie == 0:
-                print("For %s: you won %d games and lost %d, (%d percent of games won)" % (i, won, lost, percent))
+                print("For %s: you won %d games and lost %d, (%d percent of games won)" % (i, won, lost, percent*100))
             else:
-                print("For %s: you won %d games, tied %d and lost %d, (%d percent of games won)" % (i, won, tie, lost, percent))
+                print("For %s: you won %d games, tied %d and lost %d, (%d percent of games won)" % (i, won, tie, lost, percent*100))
         final = "gained" if self.money > 100 else ("still have" if self.money==100 else "lost")
         print("---------------------")
         print("You %s %d chips" % (final, abs(self.money-100)))
@@ -64,7 +65,7 @@ class Casino:
 
         # Win result
         if prediction == result:
-            print("You win!")
+            cprint("- You won!", "green")
             
             self.money += betted_money*2
             times = 1
@@ -112,7 +113,7 @@ class Casino:
                 
                 # Lose condition in a double or nothing scenario
                 else:
-                    print("- You lost")
+                    cprint("- You lost", "red")
                     self.money -= betted_money*(1+times)
                     self.track_record("Heads or Tails", "Lost")
                     break
@@ -122,7 +123,7 @@ class Casino:
 
         # Lose condition
         else:
-            print("- You lost")
+            cprint("- You lost", "red")
             self.track_record("Heads or Tails", "Lost")
                 
         self.balance()
@@ -202,11 +203,11 @@ class Casino:
                     print("DOUBLE " + first_wheel[i] + "!!")
         
         if compensation != 0:
-            print("- You won!")
+            cprint("- You won!", "green")
             self.money += betted_money*compensation
             self.track_record("Slot Machine", "Win")
         else:
-            print("- You lost")
+            cprint("- You lost", "red")
             self.track_record("Slot Machine", "Lost")
         
         self.balance()
@@ -295,7 +296,7 @@ class Casino:
                 if player_total == 21:
                     print("Blackjack!")
                     self.money += betted_money/2
-                print("- You won!")
+                cprint("- You won!", "green")
                 self.track_record("Blackjack", "Win")
             
             elif bank_total == player_total: # Tie condition
@@ -304,11 +305,11 @@ class Casino:
                 self.track_record("Blackjack", "Tie")
             
             else: # Lose condition because the player's total was less than the banker's
-                print("- You lost")
+                cprint("- You lost", "red")
                 self.track_record("Blackjack", "Lost")
 
         else: # Lose condition because the player bust
-            print("- You lost")
+            cprint("- You lost", "red")
             self.track_record("Blackjack", "Lost")
         
         self.balance()
@@ -406,10 +407,10 @@ class Casino:
         if win_check == True:
             # If the player bets on two or more things simultaneously the compensation is greater
             self.money += betted_money*compensation
-            print("- You won!")
+            cprint("- You won!", "green")
             self.track_record("Roulette", "Win")
         else:
-            print("- You lost")
+            cprint("- You lost", "red")
             self.track_record("Roulette", "Lost")
         
         self.balance()  
@@ -527,24 +528,24 @@ class Casino:
             # A player pair occurs
             if pair == "Player": # If the better betted on a player pair
                 self.money += 8*betted_money
-                print("++ Player pair! ++")
+                cprint("++ Player pair! ++", "green")
                 self.track_record("Baccarat", "Win")
             elif pair == "Any": # If the better betted on any pair
                 any_case = False
                 self.money += 6*betted_money
-                print("+ Player pair! +")
+                cprint("+ Player pair! +", "green")
                 self.track_record("Baccarat", "Win")
             else: # If no bet was made
                 print("(Player pair)")
 
         elif bank_card1 == bank_card2 or bank_card2 == bank_card3 or bank_card3 == bank_card1:
             if pair == "Banker": # If the better betted on a banker pair
-                print("++ Banker pair! ++ ")
+                cprint("++ Banker pair! ++ ", "green")
                 self.money += 12*betted_money
                 self.track_record("Baccarat", "Win")
             elif pair == "Any" and any_case == True: # If the better betted on any pair
                 self.money += 6*betted_money
-                print("+ Banker pair! +")
+                cprint("+ Banker pair! +", "green")
                 self.track_record("Baccarat", "Win")
             else: # If no bet was made
                 print("(Banker pair)")
@@ -552,38 +553,43 @@ class Casino:
         # Win result
         
         if player_total > bank_total: # Player win
-            print("- Player wins! -")
             if player_or_better == "Player" or (player_or_better == "Better" and x_win == "Player"):
+                cprint("- Player wins! -", "green")
                 self.money += 1.95*betted_money
                 self.track_record("Baccarat", "Win")
             else:
+                cprint("- Player wins! -", "red")
                 self.track_record("Baccarat", "Lost")            
 
         elif player_total < bank_total:
-            print("- Banker wins! -")
             if player_or_better == "Better" and x_win == "Banker":
+                cprint("- Banker wins! -", "green")
                 self.money += 1.95*betted_money
                 self.track_record("Baccarat", "Win")
             else:
+                cprint("- Banker wins! -", "red")
                 self.track_record("Baccarat", "Lost")
 
         else:
-            print("- It's a tie ! -")
             self.track_record("Baccarat", "Tie")
             if player_or_better == "Player":
                 self.money += betted_money
+                cprint("- It's a tie ! -", "yellow")
             elif player_or_better == "Better" and x_win == "Tie":
-                self.money += 9*betted_money    
+                self.money += 9*betted_money
+                cprint("- It's a tie ! -", "green")
+            else:
+                cprint("- It's a tie ! -", "yellow")    
         
         self.balance()
 
         
-# player_1 = Casino()
+player_1 = Casino()
 
-# player_1.heads_or_tails(20, autoplay=True)
-# player_1.roulette(20, odd_or_even="Odd")
-# player_1.slot_machine(20)
-# player_1.blackjack(20, autoplay=True)
-# player_1.baccarat(20, player_or_better="Player")
+player_1.heads_or_tails(20, autoplay=True)
+player_1.roulette(20, odd_or_even="Odd")
+player_1.slot_machine(20)
+player_1.blackjack(20, autoplay=True)
+player_1.baccarat(20, player_or_better="Player")
 
-# player_1.exit_the_casino()
+player_1.exit_the_casino()
