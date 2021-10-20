@@ -584,12 +584,12 @@ class Casino:
         self.balance()
 
         
-player_1 = Casino()
-
-player_1.heads_or_tails(20, autoplay=True)
-player_1.roulette(20, odd_or_even="Odd")
-player_1.slot_machine(20)
-player_1.blackjack(20, autoplay=True)
-player_1.baccarat(20, player_or_better="Player")
-
-player_1.exit_the_casino()
+# player_1 = Casino()
+# 
+# player_1.heads_or_tails(20, autoplay=True)
+# player_1.roulette(20, odd_or_even="Odd")
+# player_1.slot_machine(20)
+# player_1.blackjack(20, autoplay=True)
+# player_1.baccarat(20, player_or_better="Player")
+# 
+# player_1.exit_the_casino()
