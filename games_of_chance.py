@@ -263,17 +263,18 @@ class Casino:
                 else: # Player makes an incorrect input
                     print("Please enter a valid input (Yes/No) ")
             
-            else: # Autoplay on  /  Probability of choosing y/n
-                weights_dict = {13:[99, 1], 14:[99, 1], 15:[98,2], 16:[96, 4], 17:[95, 5], 18:[94, 6], 19:[15, 85], 20:[3, 97]}
-                
+            else: # Autoplay on  
+                # Hit or Stand chart, depending on bank's card (key), if player's total is more or equal
+                # than the value in the dict he stands, otherwise he hits
+                hit_or_stand_dict = {1:13, 2:13, 3:13, 4:12, 5:12, 6:12, 7:17, 8:17, 9:17, 10:17}
                 if player_total < 13: # 13 is the threshold for drawing  100% of times (banker does the same)
                     cards_left -= 1
                     blackjack_cardn = round_deck.pop(random.randint(0, cards_left))
                     player_total += figure_to_num(blackjack_cardn)
                     print("You picked " + str(blackjack_cardn) + " (Total = " + str(player_total) + ")")
 
-                else: # Make a weighted decision
-                    if random.choices([True, False], weights=weights_dict[player_total])[0]: # Player drawss
+                else: # Make decision
+                    if player_total < hit_or_stand_dict[bank_total]: # Player draws
                         cards_left -= 1
                         blackjack_cardn = round_deck.pop(random.randint(0, cards_left))
                         player_total += figure_to_num(blackjack_cardn)
@@ -284,7 +285,7 @@ class Casino:
                 
         if player_total <= 21: # Banker turn
 
-            while bank_total < player_total: # Banker draws
+            while bank_total < 17: # Banker draws
                 cards_left -= 1
                 bank_cardn = round_deck.pop(random.randint(0, cards_left))
                 bank_total += figure_to_num(bank_cardn)
@@ -590,6 +591,7 @@ class Casino:
 # player_1.roulette(20, odd_or_even="Odd")
 # player_1.slot_machine(20)
 # player_1.blackjack(20, autoplay=True)
+
 # player_1.baccarat(20, player_or_better="Player")
 # 
 # player_1.exit_the_casino()
