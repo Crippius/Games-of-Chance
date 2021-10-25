@@ -4,11 +4,7 @@ from termcolor import colored, cprint
 
 class Casino:
 
-    id = 0
-
     def __init__(self, money=100):
-        self.id = Casino.id
-        Casino.id += 1
         self.money = money
         self.record = {}
         print("Welcome to the 'Games of Chance' casino! you have " + str(self.money) + " chips you can bet. Good Luck!")
@@ -19,6 +15,9 @@ class Casino:
 
     def set_money(self, money=100):
         self.money = money
+    
+    def add_money(self, money):
+        self.money += money
         
     def track_record(self, game, result):
         if game not in self.record:
@@ -32,7 +31,9 @@ class Casino:
             tie = self.record[i].count("Tie")
             lost = self.record[i].count("Lost")
             percent = (won/(won+lost+tie))
-            if tie == 0:
+            if won+lost+tie == 0:
+                pass
+            elif tie == 0:
                 print("For %s: you won %d games and lost %d, (%d percent of games won)" % (i, won, lost, percent*100))
             else:
                 print("For %s: you won %d games, tied %d and lost %d, (%d percent of games won)" % (i, won, tie, lost, percent*100))
