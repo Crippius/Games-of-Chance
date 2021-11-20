@@ -16,4 +16,4 @@ In the notebook file you will find my study on gambling while using these pieces
 Since I wanted to complete this project individually, I will only accept small, quality of life changes for this project, not entire new games.
 
 ## What's next?
-I think my objectives for this repo are mostly fullfilled; I will probably only make small adjustements and resolve the last bugs, no big changes on the structure of the project. 
+Working on making the code interactable in the main.py file
