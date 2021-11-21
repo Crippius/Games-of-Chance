@@ -1,5 +1,5 @@
 # Games of Chance
-Games of Chance is a project in which I tried to create different casino games with Pythob; I later looked at some interesting data about gambling with the same programs by using plots and general statistics.
+Games of Chance is a project in which I tried to create different casino games with Python; I later looked at some interesting data about gambling with the same programs by using plots and general statistics.
 
 ## What can you find?
 In this repository you can find the python script that simulates the following games:
