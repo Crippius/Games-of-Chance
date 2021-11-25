@@ -1,5 +1,5 @@
 # Games of Chance
-Games of Chance is a project in which I tried to create different casino games by using loops, if conditions, and classes; I later looked at some interesting data about gambling with the same programs by using plots and general statistics.
+Games of Chance is a project in which I tried to create different casino games with Python; I later looked at some interesting data about gambling with the same programs by using plots and general statistics.
 
 ## What can you find?
 In this repository you can find the python script that simulates the following games:
@@ -16,4 +16,4 @@ In the notebook file you will find my study on gambling while using these pieces
 Since I wanted to complete this project individually, I will only accept small, quality of life changes for this project, not entire new games.
 
 ## What's next?
-I think my objectives for this repo are mostly fullfilled; I will probably only make small adjustements and resolve the last bugs, no big changes on the structure of the project. 
+Working on making the code interactable in the main.py file
