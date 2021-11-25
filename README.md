@@ -17,4 +17,5 @@ Since I wanted to complete this project individually, I will only accept small, 
 
 ## What's next?
 Working on making the code interactable in the main.py file
-Studying how pygame works to make the progam play not on the terminal
+
+Studying how pygame works to play the game in an appropiate environment and not on the terminal
