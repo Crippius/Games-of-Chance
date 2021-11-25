@@ -5,16 +5,17 @@ from problems_check import problems_check
 
 def start():
 
-    def check_retry():
+    def check_retry(): # Checks if the player wants to retry, returns 1 if positive, 0 in the other case
+
         response = ""
-        key_words = ["yes", "y", "yeh", "retry", "1", "no", "n", "nope", "stop", "0"]
+        key_words = ["yes", "y", "yeh", "1", "retry", "no", "n", "nope", "0", "stop"]
         while(response not in key_words):
 
             response = input("Do you want to retry? ")
             if response not in key_words:
                 print("Please enter a valid response (", end='')
                 for i in key_words:
-                    print(i, end='')
+                    print(i, end=', ')
                 print(")")
 
         if response in key_words[:5]:
@@ -40,6 +41,7 @@ def start():
 
     input("Press any key to start the program ")
     player = Casino()
+    
     while True:
 
         retry = 1
@@ -69,24 +71,66 @@ def start():
             time.sleep(3)
         
         elif decision == "1" or decision.lower() == "coin toss":
-            pass
+            while(retry):
+
+                bet = [0, False]
+
+                bet[0] = int(input("How much money do you want to bet? "))
+                bet[1] = input("What is your prediction? (Heads/Tails) ").title()
+
+                player.heads_or_tails(bet[0], bet[1])
+                time.sleep(1)
+                retry = check_retry()
 
         elif decision == "2" or decision.lower() == "slots":
             while(retry):
-                player.slot_machine(20)
+                player.slot_machine(int(input("How much money do you want to bet? ")))
                 time.sleep(1)
                 retry = check_retry()
                 
 
         
-        elif decision == "3" or decision.lower() == "coin toss":
-            pass
+        elif decision == "3" or decision.lower() == "blackjack":
+            while(retry):
+                player.blackjack(int(input("How much money do you want to bet? ")))
+                time.sleep(1)
+                retry = check_retry()
 
-        elif decision == "4" or decision.lower() == "coin toss":
-            pass
 
-        elif decision == "5" or decision.lower() == "coin toss":
-            pass
+        elif decision == "4" or decision.lower() == "roulette":
+            while(retry):
+                bet = [0, False, False, False, False]
+
+                bet[0] = int(input("How much money do you want to bet? "))
+                questions = ["Odd or Even? ", "Manque or Passe? ", "Red, Black or Green? ", "Which number(s)? "]
+                res = int(input("Do you want to bet on: (1) Odd or Even, (2) Manque or Passe, (3) Colour, (4) Numbers? "))
+                if res != 4:
+                    bet[res] = input(questions[res-1]).title()
+                else:
+                    bet[res] = [int(i) for i in input(questions[res-1]).split()]
+                
+                player.roulette(bet[0], bet[1], bet[2], bet[3], bet[4])
+                time.sleep(1)
+                retry = check_retry()
+            
+
+        elif decision == "5" or decision.lower() == "baccarat":
+            while(retry):
+                bet = [0, False, False, False]
+
+                bet[0] = int(input("How much money do you want to bet? "))
+                bet[1] =  input("Do you want to be a player or a better? (Player/Better) ").title()
+
+                if bet[1] == "Better":
+                    if input("Do you want to bet on who wins?").title() in ["Yes", "Y", "1"]:
+                        bet[2] = input("Who do you think is going to win? (Player/Banker/Tie) ").title()
+
+                    elif input("Do you want to bet on a possible pair?").title() in ["Yes", "Y", "1"]:
+                        bet[3] = input("Who do you think is going to get the pair? (Player/Banker/Any) ").title()
+
+                player.baccarat(bet[0], bet[1], bet[2], bet[3])
+                time.sleep(1)
+                retry = check_retry()
 
 if __name__ == "__main__":
     start()
