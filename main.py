@@ -22,6 +22,13 @@ def start():
             return 1
         else:
             return 0
+        
+    def int_input(str):
+        try:
+            return int(input(str))
+        except ValueError:
+            print("Please add an integer")
+            return int_input(str)
 
     menu = ["1 - Play Heads or Tails (type '1' or 'coin toss')",
             "2 - Play Slots Machines (type '2' or 'slots)",
@@ -75,7 +82,7 @@ def start():
 
                 bet = [0, False]
 
-                bet[0] = int(input("How much money do you want to bet? "))
+                bet[0] = int_input("How much money do you want to bet? ")
                 bet[1] = input("What is your prediction? (Heads/Tails) ").title()
 
                 player.heads_or_tails(bet[0], bet[1])
@@ -84,7 +91,7 @@ def start():
 
         elif decision == "2" or decision.lower() == "slots":
             while(retry):
-                player.slot_machine(int(input("How much money do you want to bet? ")))
+                player.slot_machine(int_input("How much money do you want to bet? "))
                 time.sleep(1)
                 retry = check_retry()
                 
@@ -92,7 +99,7 @@ def start():
         
         elif decision == "3" or decision.lower() == "blackjack":
             while(retry):
-                player.blackjack(int(input("How much money do you want to bet? ")))
+                player.blackjack(int_input("How much money do you want to bet? "))
                 time.sleep(1)
                 retry = check_retry()
 
@@ -101,13 +108,18 @@ def start():
             while(retry):
                 bet = [0, False, False, False, False]
 
-                bet[0] = int(input("How much money do you want to bet? "))
+                bet[0] = int_input("How much money do you want to bet? ")
                 questions = ["Odd or Even? ", "Manque or Passe? ", "Red, Black or Green? ", "Which number(s)? "]
-                res = int(input("Do you want to bet on: (1) Odd or Even, (2) Manque or Passe, (3) Colour, (4) Numbers? "))
+                res = int_input("Do you want to bet on: (1) Odd or Even, (2) Manque or Passe, (3) Colour, (4) Numbers? ")
                 if res != 4:
                     bet[res] = input(questions[res-1]).title()
                 else:
-                    bet[res] = [int(i) for i in input(questions[res-1]).split()]
+                    bet[res] = []
+                    for i in input(questions[res-1]).split():
+                        try:
+                            bet[res].append(int(i))
+                        except ValueError:
+                            print("You added an invalid character, it won't be included in the bet")
                 
                 player.roulette(bet[0], bet[1], bet[2], bet[3], bet[4])
                 time.sleep(1)
@@ -118,7 +130,7 @@ def start():
             while(retry):
                 bet = [0, False, False, False]
 
-                bet[0] = int(input("How much money do you want to bet? "))
+                bet[0] = int_input("How much money do you want to bet? ")
                 bet[1] =  input("Do you want to be a player or a better? (Player/Better) ").title()
 
                 if bet[1] == "Better":
