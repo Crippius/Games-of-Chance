@@ -1,6 +1,6 @@
 import random
 from problems_check import problems_check
-from termcolor import colored, cprint
+from termcolor import cprint
 
 class Casino:
 
@@ -10,8 +10,8 @@ class Casino:
         print("Welcome to the 'Games of Chance' casino! you have " + str(self.money) + " chips you can bet. Good Luck!")
 
     def balance(self):
-        print("Your balance is: " + str(self.money))
-        return self.money
+        print("Your balance is: " + str(round(self.money, 4)))
+        return round(self.money, 4)
 
     def set_money(self, money=100):
         self.money = money
@@ -50,7 +50,7 @@ class Casino:
         if check["check"] == False:
             print("You've made an incorrect bet, no money will be taken, the problem is:")
             print(check["reason"])
-            return
+            return -1, check["reason"]
         
         print("-> Playing Heads or Tails...")  
         self.money -= betted_money
@@ -128,6 +128,7 @@ class Casino:
             self.track_record("Heads or Tails", "Lost")
                 
         self.balance()
+        return 0, ""
 
     def slot_machine(self, betted_money):
 
@@ -136,7 +137,7 @@ class Casino:
         if check["check"] == False:
             print("You've made an incorrect bet, no money will be taken, the problem is:")
             print(check["reason"])
-            return
+            return -1, check["reason"]
         
         print("-> Playing Slot Machines...")
         self.money -= betted_money
@@ -212,6 +213,7 @@ class Casino:
             self.track_record("Slot Machine", "Lost")
         
         self.balance()
+        return 0, ""
 
     def blackjack(self, betted_money, autoplay=False):
 
@@ -220,7 +222,7 @@ class Casino:
         if check["check"] == False:
             print("You've made an incorrect bet, no money will be taken, the problem is:")
             print(check["reason"])
-            return
+            return -1, check["reason"]
 
         print("-> Playing Blackjack...")
         self.money -= betted_money
@@ -315,6 +317,7 @@ class Casino:
             self.track_record("Blackjack", "Lost")
         
         self.balance()
+        return 0, ""
 
     def roulette(self, betted_money, odd_or_even=False, manque_or_passe=False, red_black_green=False, numbers=False):
 
@@ -332,7 +335,7 @@ class Casino:
         if check["check"] == False:
             print("You've made an incorrect bet, no money will be taken, the problem is:")
             print(check["reason"])
-            return
+            return -1, check["reason"]
             
         print("-> Playing Roulette...")
 
@@ -415,7 +418,8 @@ class Casino:
             cprint("- You lost", "red")
             self.track_record("Roulette", "Lost")
         
-        self.balance()  
+        self.balance() 
+        return 0, ""
 
     def baccarat(self, betted_money, player_or_better="Player", x_win=False, pair=False):
 
@@ -430,7 +434,7 @@ class Casino:
         if check["check"] == False:
             print("You've made an incorrect bet, no money will be taken, the problem is:")
             print(check["reason"])
-            return
+            return -1, check["reason"]
         
         print("-> Playing Baccarat...")
         
@@ -584,6 +588,7 @@ class Casino:
                 cprint("- It's a tie ! -", "yellow")    
         
         self.balance()
+        return 0, ""
 
         
 # player_1 = Casino()

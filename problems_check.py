@@ -20,6 +20,13 @@ def problems_check(money, betted_money, checking_dict=False, roulette_numbers=Fa
         problems["check"] = False
         problems["reason"].append("Negative amount of money betted")
     
+    if betted_money == 0:
+        # No money betted
+        problems["check"] = False
+        problems["reason"].append("No amount of money betted")
+    
+
+    
 
     # Resolving problems caused by an incorrect input for a certain parameter
     if checking_dict != False:

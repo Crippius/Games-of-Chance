@@ -1,148 +1,168 @@
-import sys
-import time
-from casino import Casino
+from tkinter import *
+from tkinter import messagebox
 from problems_check import problems_check
+from casino import Casino
 
-def start():
 
-    def check_retry(): # Checks if the player wants to retry, returns 1 if positive, 0 in the other case
+class Intry(Entry):
+    def __init__(self, master=None, **kwargs):
+        self.var = StringVar()
+        Entry.__init__(self, master, textvariable=self.var, **kwargs)
+        self.old_value = ''
+        self.var.trace('w', self.check)
+        self.get, self.set = self.var.get, self.var.set
 
-        response = ""
-        key_words = ["yes", "y", "yeh", "1", "retry", "no", "n", "nope", "0", "stop"]
-        while(response not in key_words):
-
-            response = input("Do you want to retry? ")
-            if response not in key_words:
-                print("Please enter a valid response (", end='')
-                for i in key_words:
-                    print(i, end=', ')
-                print(")")
-
-        if response in key_words[:5]:
-            return 1
+    def check(self, *args):
+        if self.get().isdigit(): 
+            # the current value is only digits; allow this
+            self.old_value = self.get()
         else:
-            return 0
-        
-    def int_input(str):
-        try:
-            return int(input(str))
-        except ValueError:
-            print("Please add an integer")
-            return int_input(str)
+            # there's non-digit characters in the input; reject this 
+            self.set(self.old_value)
 
-    menu = ["1 - Play Heads or Tails (type '1' or 'coin toss')",
-            "2 - Play Slots Machines (type '2' or 'slots)",
-            "3 - Play Blackjack (type '3' or 'blackjack')",
-            "4 - Play Roulette (type '4' or 'roulette')",
-            "5 - Play Baccarat (type '5' or 'baccarat')",
-            "6 - View your balance (type '6' or 'balance')",
-            "7 - See credits (type '7' or 'credits')",
-            "0 - Exit the game (type '0' or 'exit')"]
 
-    print("""
-    Thanks for installing Games of Chance!
-    In this program you can play some of the most famous gambling games ever!
-    Hope you will enjoy this project!
-    You will be starting with 100 chips to bet on, good luck!
-    """)
+root = Tk()
+root.title("Games of Chance")
+root.iconbitmap("sprites/duh.ico")
+root.configure(background="#009900")
+#root.geometry("%dx%d" % (root.winfo_screenwidth() , root.winfo_screenheight()))
+root.geometry("1232x465")
 
-    input("Press any key to start the program ")
-    player = Casino()
+player = Casino()
+chips = StringVar()
+chips.set(f"{player.balance()} chips")
+# messagebox.showinfo("Welcome!", 
+# """
+# Thanks for installing Games of Chance!
+# In this program you can play some of the most famous gambling games ever!
+# Hope you will enjoy this project!
+# You will be starting with 100 chips to bet on, good luck!
+# """)
+
+def update():
+    global chips
+    chips.set(f"{player.balance()} chips")
+
+def play(game, *args):
+    if args[0]  == "":
+        messagebox.showerror("Error!", "No amount of money betted")
+        return
+
+    if game == "slots":
+        check, result = player.slot_machine(int(args[0]))
+    elif game == "baccarat":
+        if args[1] == "Player":
+            check, result = player.baccarat(int(args[0]), args[1], False, False)
+        else:
+            check, result = player.baccarat(int(args[0]), args[1], args[2], args[3])
+    if check == -1:
+        messagebox.showerror("Error!", str(result))
     
-    while True:
-
-        retry = 1
-        for i in menu:
-            print(i)
-        decision = input("What do you want to do? --> ")
-
-        if decision == "0" or decision.lower() == "exit":
-            player.exit_the_casino()
-            time.sleep(5)
-            sys.exit(1)
-
-        elif decision == "7" or decision.lower() == "credits":
-            print("""
-            This program was developed in the second half of 2021 by Tommaso Crippa
-            Github profile: https://github.com/Crippius
-            Linkedin profile: https://www.linkedin.com/in/tommaso-crippa-a127ab222/
-            Email: crippa.tommaso@gmail.com
-            """)
-            time.sleep(5)
-            print("As a gift for viewing the credits you will be awarded 200 chips ;)")
-            player.add_money(money=200)
-            time.sleep(3.5)
-
-        elif decision == "6" or decision.lower() == "balance":
-            player.balance()
-            time.sleep(3)
-        
-        elif decision == "1" or decision.lower() == "coin toss":
-            while(retry):
-
-                bet = [0, False]
-
-                bet[0] = int_input("How much money do you want to bet? ")
-                bet[1] = input("What is your prediction? (Heads/Tails) ").title()
-
-                player.heads_or_tails(bet[0], bet[1])
-                time.sleep(1)
-                retry = check_retry()
-
-        elif decision == "2" or decision.lower() == "slots":
-            while(retry):
-                player.slot_machine(int_input("How much money do you want to bet? "))
-                time.sleep(1)
-                retry = check_retry()
-                
-
-        
-        elif decision == "3" or decision.lower() == "blackjack":
-            while(retry):
-                player.blackjack(int_input("How much money do you want to bet? "))
-                time.sleep(1)
-                retry = check_retry()
+    update()
 
 
-        elif decision == "4" or decision.lower() == "roulette":
-            while(retry):
-                bet = [0, False, False, False, False]
 
-                bet[0] = int_input("How much money do you want to bet? ")
-                questions = ["Odd or Even? ", "Manque or Passe? ", "Red, Black or Green? ", "Which number(s)? "]
-                res = int_input("Do you want to bet on: (1) Odd or Even, (2) Manque or Passe, (3) Colour, (4) Numbers? ")
-                if res != 4:
-                    bet[res] = input(questions[res-1]).title()
-                else:
-                    bet[res] = []
-                    for i in input(questions[res-1]).split():
-                        try:
-                            bet[res].append(int(i))
-                        except ValueError:
-                            print("You added an invalid character, it won't be included in the bet")
-                
-                player.roulette(bet[0], bet[1], bet[2], bet[3], bet[4])
-                time.sleep(1)
-                retry = check_retry()
-            
 
-        elif decision == "5" or decision.lower() == "baccarat":
-            while(retry):
-                bet = [0, False, False, False]
 
-                bet[0] = int_input("How much money do you want to bet? ")
-                bet[1] =  input("Do you want to be a player or a better? (Player/Better) ").title()
+def baccarat_prep():
+    branch = Toplevel()
+    branch.title("Baccarat")
+    branch.iconbitmap("sprites/duh.ico")
+    branch.configure(background="#009900")
 
-                if bet[1] == "Better":
-                    if input("Do you want to bet on who wins?").title() in ["Yes", "Y", "1"]:
-                        bet[2] = input("Who do you think is going to win? (Player/Banker/Tie) ").title()
+    money_label = Label(branch, text="Money to bet:", bg="#009000", font=("Helvetica", 14))
+    money_label.grid(row=0, column=0, columnspan=4)
 
-                    elif input("Do you want to bet on a possible pair?").title() in ["Yes", "Y", "1"]:
-                        bet[3] = input("Who do you think is going to get the pair? (Player/Banker/Any) ").title()
+    bet = Intry(branch, bg="#D3D3D3")
+    bet.grid(row=0, column=4, columnspan=2)
 
-                player.baccarat(bet[0], bet[1], bet[2], bet[3])
-                time.sleep(1)
-                retry = check_retry()
+    player_or_better = StringVar()
+    player_or_better.set("Player")
 
-if __name__ == "__main__":
-    start()
+    x_win = StringVar()
+    x_win.set(False)
+
+    pair = StringVar()
+    pair.set(False)
+
+    p_radio = Radiobutton(branch, text="Player", bg="#008000", variable=player_or_better, value="Player")
+    p_radio.grid(row=1, column=0, columnspan=3, sticky=W+E+N+S)
+
+    b_radio = Radiobutton(branch, text="Better", bg="#008000", variable=player_or_better, value="Better")
+    b_radio.grid(row=1, column=3, columnspan=3, sticky=W+E+N+S)
+
+    p_win_radio = Radiobutton(branch, text="Player win", bg="#008000", variable=x_win, value="Player")
+    p_win_radio.grid(row=2, column=0, columnspan=2, sticky=W+E+N+S)
+
+    b_win_radio = Radiobutton(branch, text="Banker win", bg="#008000", variable=x_win, value="Banker")
+    b_win_radio.grid(row=2, column=2, columnspan=2, sticky=W+E+N+S)
+
+    tie_radio = Radiobutton(branch, text="Tie", bg="#008000", variable=x_win, value="Tie")
+    tie_radio.grid(row=2, column=4, columnspan=2, sticky=W+E+N+S)
+
+    p_pair_radio = Radiobutton(branch, text="Player pair", bg="#008000", variable=pair, value="Player")
+    p_pair_radio.grid(row=3, column=0, columnspan=2, sticky=W+E+N+S)
+
+    b_pair_radio = Radiobutton(branch, text="Banker pair", bg="#008000", variable=pair, value="Banker")
+    b_pair_radio.grid(row=3, column=2, columnspan=2, sticky=W+E+N+S)
+
+    a_pair_radio = Radiobutton(branch, text="Any pair", bg="#008000", variable=pair, value="Any")
+    a_pair_radio.grid(row=3, column=4, columnspan=4, sticky=W+E+N+S)
+
+    submit = Button(branch, text="Submit bet", bg="#008000", font=("Helvetica", 14),  
+                    command=lambda:play("baccarat", bet.get(), player_or_better.get(), x_win.get(), pair.get()))
+    submit.grid(row=4, column=0, columnspan=3, sticky=W+E+N+S)
+
+    exit = Button(branch, text="Stop betting", bg="#008000", font=("Helvetica", 14), command=branch.destroy)
+    exit.grid(row=4, column=3, columnspan=3, sticky=W+E+N+S)
+    
+
+
+def slot_prep():
+    branch = Toplevel()
+    branch.title("Slot Machine")
+    branch.iconbitmap("sprites/duh.ico")
+    branch.configure(background="#009900")
+
+    money_label = Label(branch, text="Money to bet:", bg="#009000", font=("Helvetica", 14))
+    money_label.grid(row=0, column=0)
+
+    bet = Intry(branch, bg="#D3D3D3")
+    bet.grid(row=0, column=1)
+
+    submit = Button(branch, text="Submit bet", bg="#008000", font=("Helvetica", 14),  command=lambda:play("baccarat", bet.get()))
+    submit.grid(row=1, column=0)
+
+    exit = Button(branch, text="Stop betting", bg="#008000", font=("Helvetica", 14), command=branch.destroy)
+    exit.grid(row=1, column=1)
+
+
+
+title = Label(root, text="Games of Chance", borderwidth=2, relief="solid", font=("Helvetica", 32), bg="#008000")
+title.grid(row=0, column=0, columnspan=5, sticky=N+W+E+S)
+
+money = Label(root, textvariable=chips, borderwidth=2, relief="solid", font=("Helvetica", 32), bg="#008000")
+money.grid(row=0, column=5, ipadx=0, sticky=N+S+W+E)
+
+heads_or_tails = Button(root, text="Play\nHeads or Tails", font=("Helvetica", 42), bg="#008000", width=12)
+heads_or_tails.grid(row=1, column=0, rowspan=2, columnspan=2, ipadx=10, padx=10, pady=10, sticky=N+W+E+S)
+
+roulette = Button(root, text="Play\nRoulette", font=("Helvetica", 42), bg="#008000", width=10)
+roulette.grid(row=1, column=2, rowspan=2, columnspan=2, padx=10, pady=10, sticky=N+W+E+S)
+
+blackjack = Button(root, text="Play\nBlackjack", font=("Helvetica", 42), bg="#008000", width=12)
+blackjack.grid(row=1, column=4, rowspan=2, columnspan=2, padx=10, pady=10, sticky=N+W+E+S)
+
+slot_machine = Button(root, text="Play\nSlot Machine", font=("Helvetica", 42), bg="#008000", width=12, command=slot_prep)
+slot_machine.grid(row=3, column=0, rowspan=2, columnspan=2, padx=10, pady=10, sticky=N+W+E+S)
+
+baccarat = Button(root, text="Play\nBaccarat", font=("Helvetica", 42), bg="#008000", width=10, command=baccarat_prep)
+baccarat.grid(row=3, column=2, rowspan=2, columnspan=2, padx=10, pady=10, sticky=N+W+E+S)
+
+credits = Button(root, text="See Credits", font=("Helvetica", 32), bg="#008000", width=12)
+credits.grid(row=3, column=4, columnspan=2, padx=10, pady=10, sticky=N+W+E+S)
+
+exit = Button(root, text="Exit", font=("Helvetica", 32), bg="#008000", width=12, command=root.destroy)
+exit.grid(row=4, column=4, columnspan=2, padx=10, pady=10, sticky=N+W+E+S)
+
+root.mainloop()
